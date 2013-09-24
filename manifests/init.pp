@@ -1,41 +1,28 @@
-# == Class: windows_git
+# Class: windows::git
 #
-# Full description of class windows_git here.
+# This module downloads then installs Git for windows
 #
-# === Parameters
+# Parameters: none
 #
-# Document parameters here.
+# Actions:
 #
-# [*sample_parameter*]
-#   Explanation of what this parameter affects and what it defaults to.
-#   e.g. "Specify one or more upstream ntp servers as an array."
-#
-# === Variables
-#
-# Here you should define a list of variables that this module would require.
-#
-# [*sample_variable*]
-#   Explanation of how this variable affects the funtion of this class and if it
-#   has a default. e.g. "The parameter enc_ntp_servers must be set by the
-#   External Node Classifier as a comma separated list of hostnames." (Note,
-#   global variables should not be used in preference to class parameters  as of
-#   Puppet 2.6.)
-#
-# === Examples
-#
-#  class { windows_git:
-#    servers => [ 'pool.ntp.org', 'ntp.local.company.com' ]
-#  }
-#
-# === Authors
-#
-# Author Name <author@domain.com>
-#
-# === Copyright
-#
-# Copyright 2013 Your name here, unless otherwise noted.
-#
-class windows_git {
 
+
+class windows::git{
+  $git_url  = 'http://cloud.github.com/downloads/msysgit/git/Git-1.8.0-preview20121022.exe'
+  $git_file = 'Git-1.8.0-preview20121022.exe'
+
+  windows_common::download{'Git':
+    url  => $git_url,
+    file => $git_file,
+  }
+
+  package { 'Git-1.8.0':
+    ensure          => installed,
+    source          => "${::temp}\\${git_file}",
+    provider        => 'windows',
+    install_options => ['/VERYSILENT','/SUPPRESSMSGBOXES','/LOG'],
+    require         => Commands::Download['Git']
+  }
 
 }
