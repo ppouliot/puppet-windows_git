@@ -1,28 +1,60 @@
-# Class: windows::git
+# === Class: windows_git
 #
-# This module downloads then installs Git for windows
+# This module installs Git on Windows systems. It also adds an entry to the
+# PATH environment variable.
 #
-# Parameters: none
+# === Parameters
 #
-# Actions:
+# [*url*]
+#   HTTP url where the installer is available. It defaults to main site.
+# [*package*]
+#   Package name in the system.
+# [*file_path*]
+#   This parameter is used to specify a local path for the installer. If it is
+#   set, the remote download from $url is not performed. It defaults to false.
 #
+# === Examples
+#
+# class { 'windows_git': }
+#
+# class { 'windows_git':
+#   $url     => 'http://192.168.1.1/files/git.exe',
+#   $package => 'Git version 1.8.0-preview201221022',
+# }
+#
+# === Authors
+# 
+#
+class windows_git (
+  $url       = $::windows_git::params::url,
+  $package   = $::windows_git::params::package,
+  $file_path = false,
+) inherits windows_git::params {
 
-
-class windows::git{
-  $git_url  = 'http://cloud.github.com/downloads/msysgit/git/Git-1.8.0-preview20121022.exe'
-  $git_file = 'Git-1.8.0-preview20121022.exe'
-
-  windows_common::download{'Git':
-    url  => $git_url,
-    file => $git_file,
+  if $file_path {
+    $git_installer_path = $file_path
+  } else {
+    $git_installer_path = "${::temp}\\${package}.exe"
+    windows_common::remote_file{'Git':
+      source      => $url,
+      destination => $git_installer_path,
+      before      => Package[$package],
+    }
   }
-
-  package { 'Git-1.8.0':
+  package { $package:
     ensure          => installed,
-    source          => "${::temp}\\${git_file}",
-    provider        => 'windows',
+    source          => $git_installer_path,
     install_options => ['/VERYSILENT','/SUPPRESSMSGBOXES','/LOG'],
-    require         => Commands::Download['Git']
   }
 
+  if $::architecture == 'x64' {
+    $git_path = 'C:\Program Files (x86)\Git\cmd'
+  } else {
+    $git_path = 'C:\Program Files\Git\cmd'
+  }
+ 
+  windows_path { $git_path:
+    ensure  => present,
+    require => Package[$package],
+  }
 }
