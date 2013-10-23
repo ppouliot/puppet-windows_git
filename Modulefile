@@ -3,9 +3,9 @@ version '0.1.0'
 source 'https://github.com/openstack-hyper-v/puppet-windows_git.git'
 author 'Peter Pouliot <peter@pouliot.net>'
 license 'Apache License, Version 2.0'
-summary 'UNKNOWN'
-description 'UNKNOWN'
-project_page 'UNKNOWN'
+summary 'Puppet module for installing git on the Windows Platform'
+description 'Puppet module for installing git on the Windows Platform'
+project_page 'https://github.com/openstack-hyper-v/puppet-windows_git'
 
 ## Add dependencies, if any:
 # dependency 'username/name', '>= 1.2.0'
