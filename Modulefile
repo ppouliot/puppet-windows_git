@@ -1,4 +1,4 @@
-name    'puppet-windows_git'
+name    'openstack-hyper-v-windows_git'
 version '0.1.0'
 source 'https://github.com/openstack-hyper-v/puppet-windows_git.git'
 author 'Peter Pouliot <peter@pouliot.net>'
