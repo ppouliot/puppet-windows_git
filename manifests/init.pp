@@ -30,21 +30,30 @@ class windows_git (
   $package   = $::windows_git::params::package,
   $file_path = false,
 ) inherits windows_git::params {
-
-  if $file_path {
-    $git_installer_path = $file_path
+  if $chocolatey {
+    Package { provider => chocolatey }
   } else {
-    $git_installer_path = "${::temp}\\${package}.exe"
-    windows_common::remote_file{'Git':
-      source      => $url,
-      destination => $git_installer_path,
-      before      => Package[$package],
+    Package{
+        source          => $git_installer_path,
+        install_options => ['/VERYSILENT','/SUPPRESSMSGBOXES','/LOG'],
+        provider        => windows,
+    }
+
+    if $file_path {
+      $git_installer_path = $file_path
+    } else {
+      $git_installer_path = "${::temp}\\${package}.exe"
+      windows_common::remote_file{'Git':
+        source      => $url,
+        destination => $git_installer_path,
+        before      => Package[$package],
+      }
     }
   }
   package { $package:
     ensure          => installed,
-    source          => $git_installer_path,
-    install_options => ['/VERYSILENT','/SUPPRESSMSGBOXES','/LOG'],
+  #  source          => $git_installer_path,
+  #  install_options => ['/VERYSILENT','/SUPPRESSMSGBOXES','/LOG'],
   }
 
   if $::architecture == 'x64' {
