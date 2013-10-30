@@ -4,7 +4,8 @@ This module installs Git on Windows machines, adding the binary to the PATH envi
 
 Basic usage
 -----------
-The basic scenario allows the user to install Git fetching the installer from the main site:
+The basic scenario allows the user to install Git. Currently it supports fetching the installer from the main site, suppling a filepath, and the Chocolatey package provider.
+Basic installation is follows.
 
     class { 'windows_git': }
 
