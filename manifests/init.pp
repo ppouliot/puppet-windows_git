@@ -65,6 +65,5 @@ class windows_git (
   windows_path { $git_path:
     ensure  => present,
     require => Package[$package],
-    notify  => {$::path},
   }
 }
