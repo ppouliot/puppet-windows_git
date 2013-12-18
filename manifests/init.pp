@@ -27,12 +27,13 @@
 #
 class windows_git (
   $url       = $::windows_git::params::url,
-  $package   = $::windows_git::params::package,
   $file_path = false,
 ) inherits windows_git::params {
   if $chocolatey {
     Package { provider => chocolatey }
+    $package   = 'git'
   } else {
+    $package   = $::windows_git::params::package
     Package{
         source          => $git_installer_path,
         install_options => ['/VERYSILENT','/SUPPRESSMSGBOXES','/LOG'],
