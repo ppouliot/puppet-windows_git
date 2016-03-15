@@ -10,7 +10,7 @@ class windows_git::disable (
     ensure  => absent,
   }
 
-  windows_path { $git_path:
+  windows_path { $::git_path:
     ensure  => absent,
   }
 

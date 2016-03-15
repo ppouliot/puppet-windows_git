@@ -29,7 +29,7 @@ class windows_git (
   $url       = $::windows_git::params::url,
   $file_path = false,
 ) inherits windows_git::params {
-  if $chocolatey {
+  if $::chocolatey {
     Package { provider => chocolatey }
     $package   = 'git'
   } else {
@@ -62,7 +62,6 @@ class windows_git (
   } else {
     $git_path = 'C:\Program Files\Git\cmd'
   }
- 
   windows_path { $git_path:
     ensure  => present,
     require => Package[$package],
